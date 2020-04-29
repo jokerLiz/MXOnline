@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.users.apps.UsersConfig',
+    'apps.courses.apps.CoursesConfig'
 ]
 
 MIDDLEWARE = [
@@ -122,6 +124,8 @@ USE_I18N = True
 USE_L10N = True
 
 
+#配置覆盖user表,因为user表在django中已经注册了，我们要指定
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
