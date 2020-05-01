@@ -10,7 +10,7 @@ class LoginForm(forms.Form):
         并且报出视图函数没有返回HttpResponse对象的异常,(该异常页面可在view视图函数中进行重新编辑)
         不会再到view的提交处理函数(LoginView.post)获取数据。
     '''
-    #设置用户名必填，并且最小长度为2
+    #设置属性--用户名-必填，并且最小长度为2
     username = forms.CharField(required=True,min_length=2)
-    #密码必填，并且最小长度为3
+    #属性--密码必填，并且最小长度为3
     password = forms.CharField(required=True,min_length=3)
