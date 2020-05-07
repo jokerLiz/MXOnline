@@ -7,7 +7,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from apps.users.form import LoginForm    #表单验证
 from django.contrib.auth import authenticate,login   #用户名或密码认证
 from django.urls import reverse       #重定向参数
-#login.html的显示
+#django的登录显示及验证
 class LoginView(View):
     #如果使用get,#点击按钮#,跳转到login.html
     def get(self,request,*args,**kwargs):
@@ -56,5 +56,48 @@ class LoginView(View):
                 return render(request,'login.html',{'msg':'用户名密码错误','login_form':login_form})
         else:
             return render(request,'login.html',{'login_form':login_form})
-# def login(request):
-#     return render(request,'login.html')
+
+
+#之前方法实现登录验证
+def index1(request):
+    return render(request,'index1.html')
+
+from apps.users.models import UserProfile
+def login1(request):
+    '''
+    表单验证;
+    如果是通过get方法进行访问，那么直接返回login1.html.
+    如果使用post方法，那么表示是表单提交：
+    (1).获取用户输入的表单数据
+    (2).首先从数据库中查找用户名为用户输入的用户名的queryset对象(假设注册时用户名唯一，不重复)
+    (3).如果queryset对象存在，通过迭代取出对象中的密码，(由于用户名唯一，密码也一定唯一)
+        判断用户输入的密码是否于取出的密码相等，
+            如果相等：允许登录，重定向index1页面。
+            不相等，返回login1.html，并且携带正确的username以及错误提示信息。
+    (4).如果queryset对象不存在，那么返回login.html，并携带错误提示信息。
+
+    :param request:
+    :return:
+    '''
+    if request.method == 'GET':
+        return render(request,'login1.html')
+    if request.method == 'POST':
+        #获取表单数据
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        #从数据库中获取用户名为用户输入用户名的queryset对象，(假设注册时用户名不能重复，唯一的)
+        users = UserProfile.objects.filter(username=username)
+
+        if users.exists():           #判断queryset对象中是否有数据
+
+            passwordlist = []
+            for user in users:
+                passwordlist.append(user.password)       #通过迭代取出密码
+
+            if password in passwordlist:         #判断密码是否一致
+                    return HttpResponseRedirect(reverse('index1'))
+            else:
+                return render(request,'login1.html',{'msg':'密码错误','username':username})
+        else:
+            return render(request, 'login1.html', {'msg': '用户名不存在'})

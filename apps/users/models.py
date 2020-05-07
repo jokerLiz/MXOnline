@@ -33,10 +33,6 @@ class UserProfile(AbstractUser):
         verbose_name_plural = verbose_name
 
     def unread_nums(self):
-        """
-        未读消息数量
-        :return:
-        """
         return self.usermessage_set.filter(has_read=False).count()
 
     def __str__(self):
