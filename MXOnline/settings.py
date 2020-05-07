@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -136,7 +137,10 @@ AUTH_USER_MODEL = 'users.UserProfile'
 
 
 STATIC_URL = '/static/'
-#配置静态资源
+#配置静态资源static
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+#配置图片文件media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
