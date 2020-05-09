@@ -7,6 +7,7 @@ from apps.users import views
 from django.views.generic import TemplateView
 from apps.users.views import LoginView
 from apps.organizations.views import OrgView
+from apps.courses.views import CourseView
 
 from django.conf.urls import url          #导入url(正则表达式方式)
 from django.views.static import serve   #负责静态文件处理
@@ -30,4 +31,7 @@ urlpatterns = [
     path('orglist/',OrgView.as_view(),name = 'orglist'),
     #配置上传文件的访问  document_root:指定文件的给根路径
     url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT}),
+
+    #公开课列表展示
+    path('courselist/',CourseView.as_view(),name = 'courselist'),
 ]
