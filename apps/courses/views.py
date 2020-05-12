@@ -33,5 +33,5 @@ class CourseView(View):
 
         return render(request,'courselist.html',{
             'all_courses':courses,
-            'course_nums':course_nums
+            'course_nums':course_nums,
         })
