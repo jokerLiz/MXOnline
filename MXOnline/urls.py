@@ -6,10 +6,8 @@ import xadmin
 from apps.users import views
 from django.views.generic import TemplateView
 from apps.users.views import LoginView
-from apps.organizations.views import OrgView
-from apps.courses.views import CourseView
 
-from django.conf.urls import url          #导入url(正则表达式方式)
+from django.conf.urls import url,include          #导入url(正则表达式方式)
 from django.views.static import serve   #负责静态文件处理
 from MXOnline.settings import MEDIA_ROOT      #导入MEDIA_ROOT
 
@@ -27,11 +25,13 @@ urlpatterns = [
     path('index1/',views.index1,name = 'index1'),
     path('login1/',views.login1,name = 'login1'),
 
-    #配置授课机构的列表展示
-    path('orglist/',OrgView.as_view(),name = 'orglist'),
     #配置上传文件的访问  document_root:指定文件的给根路径
     url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT}),
 
-    #公开课列表展示
-    path('courselist/',CourseView.as_view(),name = 'courselist'),
+
+    #课程courses相关路由
+    url(r'^course/',include(('apps.courses.urls','courses'),namespace='course')),
+
+    #授课机构organizations路由
+    url(r'^org/',include(('apps.organizations.urls','organizations'),namespace='org'))
 ]

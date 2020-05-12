@@ -13,21 +13,21 @@
                 <ul>
                     <li><a href="{% url 'index' %}">首页</a></li>
                     <li>
-                        <a href="{% url 'courselist' %}" class="active">
+                        <a href="{% url 'course:list' %}" class="active">
                             公开课<img class="hot" src="/static/images/nav_hot.png">
                         </a>
                     </li>
                     <li>
                         <a href="teachers-list.html">授课教师</a>
                     </li>
-                    <li><a href="{% url 'orglist' %}">授课机构</a></li>
+                    <li><a href="{% url 'org:list' %}">授课机构</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 {% endblock %}
 
-{#  面包屑  #}
+{#  面包屑 新加的筛选选项和课程总数 #}
 {% block custum_bread %}
     <section>
         <div class="wp">
@@ -37,6 +37,29 @@
             </ul>
         </div>
     </section>
+    {#  筛选选项  #}
+    <div class="listoptions" style="margin-left: 74.5px;width: 900px">
+        <ul>
+            <li>
+                <h2>课程类别</h2>
+                <div class="cont">
+                    <a href="?ct{{ city.id }}"><span style="color:{% ifequal category '' %}green{% endifequal %}">全部</span></a>
+
+                    <a href="?ct{{ city.id }}"><span
+                            class="{% ifequal category 'pxjg' %}active2{% endifequal %}">培训机构</span></a>
+
+                    <a href="?ct{{ city.id }}"><span
+                            class="{% ifequal category 'gx' %}active2{% endifequal %}">高校</span></a>
+
+                    <a href="?ct{{ city.id }}"><span
+                            class="{% ifequal category 'gr' %}active2{% endifequal %}">个人</span></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    {#   课程总数  #}
+    <div class="all" style="padding-left: 940px;font-size: 15px;line-height: 20px;margin-top: 20px">共<span class="key">{{ course_nums }}</span>门</div>
+
 {% endblock %}
 
 {#主要内容#}
@@ -55,27 +78,30 @@
                     <div id="inWindow">
                         <div class="tab_cont " id="content">
                             <div class="group_list">
+
                                 {#   内容列表项   #}
-                                <div class="box">
+                                {% for course in all_courses %}
+                                    <div class="box">
                                     <a href="course-detail.html">
                                         <img width="280" height="350" class="scrollLoading"
-                                             src="/static/media/courses/2016/11/540e57300001d6d906000338-240-135.jpg"/>
+                                             src="{{ MEDIA_URL }}{{ course.image }}">
                                     </a>
                                     <div class="des">
                                         <a href="course-detail.html">
-                                            <h2>python入门2</h2>
+                                            <h2>{{ course.name }}</h2>
                                         </a>
-                                        <span class="fl">时长：<i class="key">0</i></span>
-                                        <span class="fr">学习人数：0&nbsp;&nbsp;</span>
+                                        <span class="fl">时长：<i class="key">{{ course.learn_times }}</i></span>
+                                        <span class="fr">学习人数：{{ course.students }}&nbsp;&nbsp;</span>
                                     </div>
                                     <div class="bottom">
-                                        <a href="course-detail.html"><span class="fl">来自慕学网666</span></a>
+                                        <a href="course-detail.html"><span class="fl">来自{{ course.category }}</span></a>
                                         <span class="star fr  notlogin
                                         " data-favid="15">
-                                        0
+                                        {{ course.fav_nums }}
                                     </span>
                                     </div>
                                 </div>
+                                {% endfor %}
 
                             </div>
                             {#     页码      #}

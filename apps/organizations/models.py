@@ -30,7 +30,6 @@ class CourseOrg(BaseModel):
     is_auth = models.BooleanField(default=False, verbose_name="是否认证")
     is_gold = models.BooleanField(default=False, verbose_name="是否金牌")
     desc = models.CharField(max_length=200, verbose_name=u"描述",default="")
-
     city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name="所在城市")
 
     def courses(self):
