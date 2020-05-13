@@ -5,28 +5,6 @@
     公开课列表 - 慕学在线网
 {% endblock %}
 
-{#选项nav css样式不同#}
-{% block  chiocelist %}
-    <nav>
-        <div class="nav">
-            <div class="wp">
-                <ul>
-                    <li><a href="{% url 'index' %}">首页</a></li>
-                    <li>
-                        <a href="{% url 'course:list' %}" class="active">
-                            公开课<img class="hot" src="/static/images/nav_hot.png">
-                        </a>
-                    </li>
-                    <li>
-                        <a href="teachers-list.html">授课教师</a>
-                    </li>
-                    <li><a href="{% url 'org:list' %}">授课机构</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-{% endblock %}
-
 {#  面包屑 新加的筛选选项和课程总数 #}
 {% block custum_bread %}
     <section>

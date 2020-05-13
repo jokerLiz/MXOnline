@@ -6,27 +6,6 @@
     授课机构
 {% endblock %}
 
-{#选项列表#}
-{% block  chiocelist %}
-    <nav>
-        <div class="nav">
-            <div class="wp">
-                <ul>
-                    <li><a href="{% url 'index' %}">首页</a></li>
-                    <li>
-                        <a href="{% url 'course:list' %}">
-                            公开课<img class="hot" src="/static/images/nav_hot.png">
-                        </a>
-                    </li>
-                    <li>
-                        <a href="teachers-list.html">授课教师</a>
-                    </li>
-                    <li class="active"><a href="{% url 'org:list' %}">授课机构</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-{% endblock %}
 
 {#面包屑#}
 {% block custum_bread %}
