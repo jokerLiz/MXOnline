@@ -43,17 +43,14 @@
             <li>
                 <h2>课程类别</h2>
                 <div class="cont">
-                    <a href="?ct{{ city.id }}"><span
-                            style="color:{% ifequal category '' %}green{% endifequal %}">全部</span></a>
+                    <a href="?ct="><span class="active2">全部</span></a>
 
-                    <a href="?ct{{ city.id }}"><span
-                            class="{% ifequal category 'pxjg' %}active2{% endifequal %}">培训机构</span></a>
+                    {% for cate in cate_list %}
 
-                    <a href="?ct{{ city.id }}"><span
-                            class="{% ifequal category 'gx' %}active2{% endifequal %}">高校</span></a>
+                        <a href="?ct={{ cate }}"><span class="">{{ cate }}</span></a>
 
-                    <a href="?ct{{ city.id }}"><span
-                            class="{% ifequal category 'gr' %}active2{% endifequal %}">个人</span></a>
+                    {% endfor %}
+
                 </div>
             </li>
         </ul>
@@ -73,9 +70,9 @@
                 <div class="left layout">
                     <div class="head">
                         <ul class="tab_header">
-                            <li class="active"><a href="?sort=">最新 </a></li>
-                            <li><a href="?sort=hot">最热门</a></li>
-                            <li><a href="?sort=students">参与人数</a></li>
+                            <li class="{% ifequal sort '' %}active{% endifequal %}"><a href="?sort=&ct={{ cate_name }}">最新 </a></li>
+                            <li class="{% ifequal sort 'hot' %}active{% endifequal %}"><a href="?sort=hot&ct={{ cate_name }}">最热门</a></li>
+                            <li class="{% ifequal sort 'students' %}active{% endifequal %}"><a href="?sort=students&ct={{ cate_name }}">参与人数</a></li>
                         </ul>
                     </div>
                     <div id="inWindow">

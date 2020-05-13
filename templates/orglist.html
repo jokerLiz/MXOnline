@@ -229,18 +229,18 @@
     <script>
         $(function () {
             $(document).ready(function () {
-                $('#jsStayBtn').on('click',function () {
+                $('#jsStayBtn').on('click', function () {
                     $.ajax({
-                        cache:false,
-                        type:'POST',
-                        url:'{% url 'org:add_ask'%}',
-                        async:true,
-                        data:$('#jsStayForm').serialize(),
-                        success:function (data) {
-                            if (data.status=='success'){
+                        cache: false,
+                        type: 'POST',
+                        url: '{% url 'org:add_ask'%}',
+                        async: true,
+                        data: $('#jsStayForm').serialize(),
+                        success: function (data) {
+                            if (data.status == 'success') {
                                 $('#jsStayForm')[0].reset();
                                 $('#jsCompanyTips').html(data.msg)
-                            }else if (data.status == 'fail'){
+                            } else if (data.status == 'fail') {
                                 $('#jsCompanyTips').html(data.msg)
                                 alert(data.msg)
                             }
