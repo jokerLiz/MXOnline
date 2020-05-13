@@ -31,6 +31,10 @@ class Course(BaseModel):
     def __str__(self):
         return self.name
 
+    def lesson_nums(self):
+        '''#获取章节数'''
+        return self.lesson_set.all().count()
+
 #章节
 class Lesson(BaseModel):
     #章节类与课程类是一对多的关系，一门课有多个章节

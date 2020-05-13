@@ -20,17 +20,21 @@ class OrgView(View):
         '''
 
         all_orgs = CourseOrg.objects.all()         #查询所有的机构信息
-        # org_nums = all_orgs.count()          #查询机构的个数
         all_citys = City.objects.all()       #查询所有的城市信息
+
 
         #机构排名。根据点击数
         hot_orgs = all_orgs.order_by('-click_nums')[:3]
+
+        #金牌与认证
+
 
         #筛选选项--机构类别
         category = request.GET.get('ct','')    #获取前台接口数据
         if category:
             # 过滤类别为用户选择的数据
             all_orgs = all_orgs.filter(category=category)
+
 
         #对所在城市进行筛选
         city_id = request.GET.get('city','')          #获取前台用户点击的选项数据
@@ -67,13 +71,13 @@ class OrgView(View):
 
 
         return render(request, 'orglist.html',{
-            'all_orgs':orgs,
-            'org_nums':org_nums,
-            'all_citys':all_citys,
-            'category':category,
-            'sort':sort,
-            'city_id':city_id,
-            'hot_orgs':hot_orgs
+            'all_orgs':orgs,          #机构列表
+            'org_nums':org_nums,      #机构个数
+            'all_citys':all_citys,    #所有城市
+            'category':category,      #机构类别，用于联动和高亮
+            'city_id': city_id,       #所选的城市id
+            'sort':sort,              #排序规则，用于高亮的显示
+            'hot_orgs':hot_orgs       #热门机构列表，前三个
             })
 
 #立即咨询函数

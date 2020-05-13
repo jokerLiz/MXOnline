@@ -3,8 +3,10 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic import View   #视图类
 from apps.courses.models import *     #模型类
-from pure_pagination import Paginator, EmptyPage, PageNotAnInteger     #分页
+from pure_pagination import Paginator, PageNotAnInteger     #分页
 
+from apps.operations.models import UserFavorite       #用户收藏表
+#课程页
 class CourseView(View):
     def get(self, request, *args, **kwargs):
         '''
@@ -64,4 +66,38 @@ class CourseView(View):
             'cate_name':cate_name,             #点击的选项名，用于前端的高亮和联动
             'sort':sort,                       #点击的排序规则，用于前端的高亮变换
             'hot_courses':hot_courses          #热门课程前三个
+        })
+
+
+#课程详情页
+class CourseDetailView(View):
+    def get(self, request,course_id,*args, **kwargs):
+        '''
+        课程详情信息的展示
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        #根据前台传过来的id到数据库中获取该课程的信息
+        course = Course.objects.get(id=int(course_id))
+        #当用户点击一次，就记录一次该课程的点击数
+        course.click_nums+=1
+        course.save()
+
+        #获取收藏状态
+        has_fav_course = False
+        has_fav_org = False
+        if request.user.is_authenticated:         #如果用户通过验证
+            #查询用户是否收藏了该课程或该机构
+            #fav_type=1 证明课程收藏，如果查出来，说明已经收藏了这个课
+            if UserFavorite.objects.filter(user=request.user,fav_id=course_id,fav_type=1):
+                has_fav_course = True
+            if UserFavorite.objects.filter(user=request.user, fav_id=course_id, fav_type=2):
+                has_fav_org = True
+
+        return render(request,'coursedetail.html',{
+            'course':course,
+            'has_fav_course':has_fav_course,
+            'has_fav_org':has_fav_org
         })
