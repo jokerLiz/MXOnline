@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #admin
 #username：admin
-#password：12345678
+#password：123456789
 LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 USE_TZ = False           #数据库时间保持一致
