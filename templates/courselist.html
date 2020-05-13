@@ -57,8 +57,7 @@
     </div>
     {#   课程总数  #}
     <div class="all" style="padding-left: 940px;font-size: 15px;line-height: 20px;margin-top: 20px">共<span
-            class="key">{{ course_nums }}</span>门
-    </div>
+            class="key">{{ course_nums }}</span>门</div>
 
 {% endblock %}
 
@@ -142,48 +141,23 @@
                     </div>
                 </div>
                 <div class="right layout">
+
                     <div class="head">热门课程推荐</div>
                     <div class="group_recommend">
-
-                        <dl>
+                        {% for hot_cours in hot_courses %}
+                            <dl>
                             <dt>
                                 <a target="_blank" href="">
                                     <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/11/540e57300001d6d906000338-240-135_n0L8vbw.jpg"/>
+                                         src="{{ hot_cours.image.url }}"/>
                                 </a>
                             </dt>
                             <dd>
-                                <a target="_blank" href=""><h2> django与vuejs实战项目2</h2></a>
-                                <span class="fl">难度：<i class="key">高级</i></span>
+                                <a target="_blank" href=""><h2>{{ hot_cours.name }}</h2></a>
+                                <span class="fl">难度：<i class="key">{{ hot_cours.get_degree_display }}</i></span>
                             </dd>
                         </dl>
-
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/12/python面向对象.jpg"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> python面向对象</h2></a>
-                                <span class="fl">难度：<i class="key">中级</i></span>
-                            </dd>
-                        </dl>
-
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/12/python文件处理.jpg"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> python文件处理</h2></a>
-                                <span class="fl">难度：<i class="key">中级</i></span>
-                            </dd>
-                        </dl>
-
+                        {% endfor %}
 
                     </div>
                 </div>

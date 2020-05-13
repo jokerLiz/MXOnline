@@ -23,6 +23,9 @@ class CourseView(View):
             if course.category not in cate_list:
                 cate_list.append(course.category)
 
+        #获取热门课程 前三个
+        hot_courses = Course.objects.order_by('-click_nums')[:3]
+
         #根据筛选选项筛选课程数据
         cate_name = request.GET.get('ct','')   # 获取前台接口数据
         if cate_name:
@@ -60,4 +63,5 @@ class CourseView(View):
             'cate_list':cate_list,             #筛选选项列表
             'cate_name':cate_name,             #点击的选项名，用于前端的高亮和联动
             'sort':sort,                       #点击的排序规则，用于前端的高亮变换
+            'hot_courses':hot_courses          #热门课程前三个
         })
