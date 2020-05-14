@@ -31,7 +31,8 @@ urlpatterns = [
 
     #课程courses相关路由
     url(r'^course/',include(('apps.courses.urls','courses'),namespace='course')),
-
     #授课机构organizations路由
-    url(r'^org/',include(('apps.organizations.urls','organizations'),namespace='org'))
+    url(r'^org/',include(('apps.organizations.urls','organizations'),namespace='org')),
+    #用户操作operayions线相关路由
+    url(r'^op/',include(('apps.operations.urls','operations'),namespace='op'))
 ]
