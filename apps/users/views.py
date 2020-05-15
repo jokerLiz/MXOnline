@@ -57,11 +57,14 @@ class LoginView(View):
         else:
             return render(request,'login.html',{'login_form':login_form})
 
+#退出登录
+class LogoutView(View):
+    
+
 
 #之前方法实现登录验证
 def index1(request):
     return render(request,'index1.html')
-
 from apps.users.models import UserProfile
 def login1(request):
     '''

@@ -101,3 +101,16 @@ class CourseDetailView(View):
             'has_fav_course':has_fav_course,
             'has_fav_org':has_fav_org
         })
+
+
+#课程章节页
+class CourseLessonView(View):
+    '''
+    章节信息的展示
+    '''
+    def get(self,request,course_id,*args,**kwargs):
+        #获取用户点击的是哪个课程
+        course = Course.objects.get(id = course_id)
+        return render(request,'coursevideo.html',{
+            'course':course
+        })

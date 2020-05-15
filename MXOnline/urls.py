@@ -20,7 +20,8 @@ urlpatterns = [
     #login的url，进入LoginView的view中，
     #设置name是为了通过名字进行匹配与{% url ‘login’%}相匹配，也方便以后的修改和维护
     path('login/',LoginView.as_view(),name = 'login'),
-
+    #退出登录
+    path('logout/',LogoutView.as_view(),name = 'logout'),
 
     path('index1/',views.index1,name = 'index1'),
     path('login1/',views.login1,name = 'login1'),

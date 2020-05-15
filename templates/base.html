@@ -21,6 +21,7 @@
 </head>
 
 <body>
+
 {#头部#}
 <section class="headerwrap ">
     <header>
@@ -48,7 +49,7 @@
                                 </dl>
                                 <div class="btn">
                                     <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
-                                    <a class="fr" href="/logout/">退出</a>
+                                    <a class="fr" href="{% url 'logout'%}">退出</a>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +111,7 @@
 
     </header>
 </section>
-<!--crumbs start-->
+
 
 {#面包屑#}
 {% block custum_bread %}
