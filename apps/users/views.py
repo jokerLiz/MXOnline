@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic.base import View      #View视图
 from django.http import HttpResponse,HttpResponseRedirect
 from apps.users.form import LoginForm    #表单验证
-from django.contrib.auth import authenticate,login   #用户名或密码认证
+from django.contrib.auth import authenticate,login,logout   #登录时的表单认证，退出登录
 from django.urls import reverse       #重定向参数
 #django的登录显示及验证
 class LoginView(View):
@@ -59,7 +59,11 @@ class LoginView(View):
 
 #退出登录
 class LogoutView(View):
-    
+    def get(self,request,*args,**kwargs):
+        #退出登录
+        logout(request)
+        #重定向到index页面
+        return HttpResponseRedirect(reverse('index'))
 
 
 #之前方法实现登录验证

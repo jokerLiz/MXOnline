@@ -5,7 +5,7 @@ import xadmin
 
 from apps.users import views
 from django.views.generic import TemplateView
-from apps.users.views import LoginView
+from apps.users.views import LoginView,LogoutView
 
 from django.conf.urls import url,include          #导入url(正则表达式方式)
 from django.views.static import serve   #负责静态文件处理
