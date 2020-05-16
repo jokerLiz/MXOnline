@@ -6,6 +6,7 @@ from apps.courses.models import *     #模型类
 from pure_pagination import Paginator, PageNotAnInteger     #分页
 
 from apps.operations.models import UserFavorite       #用户收藏表
+from django.contrib.auth.mixins import LoginRequiredMixin    #必须登录使用的类
 #课程页
 class CourseView(View):
     def get(self, request, *args, **kwargs):
@@ -104,7 +105,8 @@ class CourseDetailView(View):
 
 
 #课程章节页
-class CourseLessonView(View):
+class CourseLessonView(LoginRequiredMixin,View):
+    login_url = '/login/'           #进入该视图类时，如果用户没有登陆，就跳转到login进行登录
     '''
     章节信息的展示
     '''

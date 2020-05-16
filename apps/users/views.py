@@ -7,11 +7,15 @@ from django.http import HttpResponse,HttpResponseRedirect
 from apps.users.form import LoginForm    #表单验证
 from django.contrib.auth import authenticate,login,logout   #登录时的表单认证，退出登录
 from django.urls import reverse       #重定向参数
+
 #django的登录显示及验证
 class LoginView(View):
     #如果使用get,#点击按钮#,跳转到login.html
     def get(self,request,*args,**kwargs):
-        return render(request,'login.html')
+        #获取next
+        next = request.GET.get('next','')
+        return render(request,'login.html',{'next':next})
+
     #如果使用的是post，#表单提交#，那么
     def post(self,request,*args,**kwargs):
         '''
@@ -49,6 +53,13 @@ class LoginView(View):
             if user is not None:
                 #登录模块，接受request和成功验证返回的user对象
                 login(request,user)
+
+                #判断next
+                next = request.GET.get('next','')
+                if next:
+                    #如果next存在，就重定向到next值的url
+                    return HttpResponseRedirect(next)
+
                 #返回重定向到index页面，然后到url中进行匹配
                 return HttpResponseRedirect(reverse('index'))
             else:
