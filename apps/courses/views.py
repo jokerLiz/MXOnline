@@ -113,6 +113,11 @@ class CourseLessonView(LoginRequiredMixin,View):
     def get(self,request,course_id,*args,**kwargs):
         #获取用户点击的是哪个课程
         course = Course.objects.get(id = course_id)
+
+        #查询该课程的资源
+        courseresource = CourseResource.objects.filter(course=course)
+
         return render(request,'coursevideo.html',{
-            'course':course
+            'course':course,
+            'courseresource':courseresource
         })
