@@ -14,6 +14,7 @@ class BaseModel(models.Model):
         #将该基类定义为抽象类，即在数据库不生成对应的表，值作为一个可以集成的基类
         abstract = True
 
+
 from django.contrib.auth.models import AbstractUser
 #由于用户在django中比较特殊，所以要事先设定一些东西
 class UserProfile(AbstractUser):

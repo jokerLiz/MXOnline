@@ -5,7 +5,7 @@ from django.views.generic import View   #视图类
 from apps.courses.models import *     #模型类
 from pure_pagination import Paginator, PageNotAnInteger     #分页
 
-from apps.operations.models import UserFavorite       #用户收藏表
+from apps.operations.models import UserFavorite,UserCourse       #用户收藏表,用户课程表
 from django.contrib.auth.mixins import LoginRequiredMixin    #必须登录使用的类
 #课程页
 class CourseView(View):
@@ -98,9 +98,9 @@ class CourseDetailView(View):
                 has_fav_org = True
 
         return render(request,'coursedetail.html',{
-            'course':course,
-            'has_fav_course':has_fav_course,
-            'has_fav_org':has_fav_org
+            'course':course,        #用户点击的课程信息
+            'has_fav_course':has_fav_course,     #用户是否收藏该课程
+            'has_fav_org':has_fav_org           #用户是否收藏该课程对应的机构
         })
 
 
@@ -114,10 +114,39 @@ class CourseLessonView(LoginRequiredMixin,View):
         #获取用户点击的是哪个课程
         course = Course.objects.get(id = course_id)
 
+        # 如果用户点击学习了该课程，那么就添加到 用户课程 的表中
+        #判断用户之前是否学习过该课程。
+        if not UserCourse.objects.filter(user=request.user,course=course):    #单例模式
+            uscour = UserCourse()  # 实例化表
+            uscour.user = request.user   #增加用户课程表
+            uscour.course = course
+            uscour.save()
+
+        #学过该课的同学该学过模块
+        all_user = UserCourse.objects.filter(course=course)    #查询学过该课的用户都有谁
+        user_ids = [users.user_id for users in all_user]     #循环遍历这些用户，添加到数组中
+        # print(user_ids)
+        # 筛选出表中user_id在数组中的queryset对象
+        course_all = UserCourse.objects.filter(user_id__in=user_ids).order_by('-course__click_nums')
+        course_list = []         #用于存储课程列表
+        for icourse in course_all:         #遍历queryset对象
+            if icourse.course_id != int(course_id) and icourse.course not in course_list:
+                #如果数组中遍历到当前课程，就pass掉,   如果该课程对象没有在列表中，就加入该列表
+                course_list.append(icourse.course)
+        course_list = course_list[:5]
+        # print(course_id)
+        # print(course.id)
+        # print(course_list)
+
+
+
         #查询该课程的资源
         courseresource = CourseResource.objects.filter(course=course)
 
+
+
         return render(request,'coursevideo.html',{
-            'course':course,
-            'courseresource':courseresource
+            'course':course,        #用户学习的课程
+            'courseresource':courseresource,           #该课程的资源
+            'course_list':course_list      #学过该课程的还学过的课程
         })
