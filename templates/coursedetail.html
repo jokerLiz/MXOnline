@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block title %}
     课程详情
 {% endblock %}
@@ -60,7 +60,9 @@
                                 <div class="btn colectgroupbtn" id="jsLeftBtn">
                                     {% if has_fav_course %}已收藏{% else %}收藏{% endif %}
                                 </div>
-                                <a style="color: white" href="{% url 'course:lesson' course.id %}"><div class="buy btn">开始学习</div></a>
+                                <a style="color: white" href="{% url 'course:lesson' course.id %}">
+                                    <div class="buy btn">开始学习</div>
+                                </a>
                             </div>
                         </div>
                         <div class="group-share-box">
@@ -99,15 +101,23 @@
                         <div class="clear">
                             <ul>
                                 <li>
-                                    <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ course.course_org.course_nums }}</span>
+                                    <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ course.course_org.course_set.all.count }}</span>
                                 </li>
                                 <li>
-                                    <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0</span>
+                                    <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ course.course_org.teacher_set.all.count }}</span>
                                 </li>
-                                <li>所在地区：&nbsp;&nbsp;{{ course.course_org.city.name }}</li>
+                                <li>所在地区：&nbsp;&nbsp;{{ course.course_org.address }}</li>
                                 <li>认&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证&nbsp;:
                                     &nbsp;&nbsp;
-                                    <img title="金牌机构" , src="/static/images/gold.png"/>
+                                    {#是否认证和金牌#}
+                                    {% if course.course_org.is_auth and course.course_org.is_gold %}
+                                        <img src="{% static 'images/authentication.png' %}"/>
+                                        <img src="{% static 'images/gold.png' %}"/>
+                                    {% elif course.course_org.is_auth and not course.course_org.is_gold %}
+                                        <img src="{% static 'images/authentication.png' %}"/>
+                                    {% elif not course.course_org.is_auth and course.course_org.is_gold %}
+                                        <img src="{% static 'images/gold.png' %}"/>
+                                    {% endif %}
                                 </li>
                             </ul>
                         </div>
@@ -255,7 +265,7 @@
 
 {# js插槽 #}
 {% block custum_js %}
-{#  收藏的ajax  #}
+    {#  收藏的ajax  #}
     <script type="text/javascript">
         //收藏的调用函数，三个参数：监听的dom对象(按钮),数据的id，数据的类型
         function add_fav(current_elem, fav_id, fav_type) {
@@ -277,8 +287,7 @@
                             alert(data.msg)
                         }
 
-                    }
-                    else if (data.status == 'success') {
+                    } else if (data.status == 'success') {
                         //修改该获取的dom对象的内容
                         current_elem.text(data.msg)
                     }
