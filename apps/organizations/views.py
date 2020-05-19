@@ -70,7 +70,7 @@ class OrgView(View):
         orgs = p.page(pindex)          #获取page页的信息
 
 
-        return render(request, 'orglist.html',{
+        return render(request, 'org-list.html', {
             'all_orgs':orgs,          #机构列表
             'org_nums':org_nums,      #机构个数
             'all_citys':all_citys,    #所有城市

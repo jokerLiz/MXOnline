@@ -61,15 +61,14 @@
             </div>
         </div>
         <div class="course-info-main clearfix w has-progress">
-
             <div class="info-bar clearfix">
                 <div class="content-wrap clearfix">
                     <div class="content">
                         <div class="mod-tab-menu">
                             <ul class="course-menu clearfix">
                                 <li><a class="ui-tabs-active active" id="learnOn"
-                                       href="course-video.html"><span>章节</span></a></li>
-                                <li><a id="commentOn" class="" href="course-comment.html"><span>评论</span></a></li>
+                                       href="{% url 'course:lesson' course.id %}"><span>章节</span></a></li>
+                                <li><a id="commentOn" class="" href="{% url 'course:comment' course.id %}"><span>评论</span></a></li>
                             </ul>
                         </div>
                         <div id="notice" class="clearfix">
@@ -104,6 +103,7 @@
                         </div>
 
                     </div>
+                    {#       右侧讲师和课程推荐         #}
                     <div class="aside r">
                         <div class="bd">
 
@@ -189,7 +189,6 @@
                 <div class="clear"></div>
 
             </div>
-
         </div>
     </div>
 {% endblock %}
