@@ -97,10 +97,21 @@ class CourseDetailView(View):
             if UserFavorite.objects.filter(user=request.user, fav_id=course_id, fav_type=2):
                 has_fav_org = True
 
+        #相关课程推荐
+        #根据课程标签进行推荐
+        course_tag = course.tag        #获取当前课程的标签
+        course_list = []     #用于存储课程的列表
+        if course_tag:
+            # 过滤课程标签在该标签中的课程，并去除id为当前课程的项,取前三个，  返回若干个queryset对象
+            course_list = Course.objects.filter(tag__contains=course.tag).exclude(id=course.id)[:3]
+        # print(course_list)
+
+
         return render(request,'coursedetail.html',{
             'course':course,        #用户点击的课程信息
             'has_fav_course':has_fav_course,     #用户是否收藏该课程
-            'has_fav_org':has_fav_org           #用户是否收藏该课程对应的机构
+            'has_fav_org':has_fav_org,          #用户是否收藏该课程对应的机构
+            'course_list':course_list         #课程推荐项
         })
 
 
