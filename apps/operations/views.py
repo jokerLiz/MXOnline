@@ -5,7 +5,7 @@ from django.views.generic.base import View  # 视图类
 
 from apps.operations.form import UserFavForm,CommentForm  # 表单验证类
 from django.http import JsonResponse
-from apps.operations.models import UserFavorite,CourseComments  #用户收藏和用户评论模型类
+from apps.operations.models import UserFavorite, CourseComments, Banner  # 用户收藏和用户评论模型类
 from apps.courses.models import Course    #课程类
 from apps.organizations.models import CourseOrg  #机构类
 from apps.organizations.models import Teacher   #教师类
@@ -109,4 +109,32 @@ class CommentView(View):
             })
 
 
+#首页
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        '''
+        首页展示
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        #轮播图，查询轮播图并按照index顺序排序
+        banners = Banner.objects.all().order_by('index')
 
+        #公开课，除去banner
+        courses = Course.objects.filter(is_banner=False)[:7]
+
+        # 小banner
+        banner_courses = Course.objects.filter(is_banner=True)[:4]
+
+        # 课程机构加载
+        course_orgs = CourseOrg.objects.all()[:15]
+
+
+        return render(request, 'index.html', {
+            "banners": banners,         #轮播图
+            "courses": courses,         #公开课
+            'banner_courses':banner_courses,       #公开课中的轮播图
+            "course_orgs": course_orgs,        #课程机构
+        })

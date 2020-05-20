@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 
 import xadmin
+from apps.operations.views import IndexView        #导入indexview
 
 from apps.users import views
 from django.views.generic import TemplateView
@@ -15,7 +16,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/',xadmin.site.urls),
 
-    path('',TemplateView.as_view(template_name='index.html'),name = 'index'),
+    # path('',TemplateView.as_view(template_name='index.html'),name = 'index'),
+    path('',IndexView.as_view(),name = 'index'),
 
     #login的url，进入LoginView的view中，
     #设置name是为了通过名字进行匹配与{% url ‘login’%}相匹配，也方便以后的修改和维护
