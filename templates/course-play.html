@@ -1,20 +1,30 @@
 {% extends 'base.html' %}
 
-{#title插槽#}
 {% block title %}
-    公开课视频信息 - 慕学在线网
+    {{ course.name }} - 慕学在线网
 {% endblock %}
 
-{#css样式#}
 {% block custum_css %}
-    <link rel="stylesheet" type="text/css" href="/static/css/muke/base.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/css/muke/common-less.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/learn-less.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/css/aui.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/css/mooc.css"/>
+     <link rel="stylesheet" type="text/css" href="/static/css/muke/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/common-less.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/muke/course/learn-less.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/mooc.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/muke/course/common-less.css">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/video-js.min.css">
+    <script src="/static/js/video.min.js" type="text/javascript"></script>
+
+    <style>
+        .video-js .vjs-big-play-button{
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+
 {% endblock %}
 
+<body>
 {#面包屑#}
 {% block custum_bread %}
     <section>
@@ -23,44 +33,23 @@
                 <ul>
                     <li><a href="{% url 'index' %}">首页</a>></li>
                     <li><a href="{% url 'course:list' %}">公开课程</a>></li>
-                    <li><a href="{% url 'course:detail' course.id %}">课程详情</a>></li>
-                    <li>章节信息</li>
+                    <li>{{ course.name }}</li>
                 </ul>
             </div>
         </div>
-    </section>
+</section>
 {% endblock %}
 
-{#内容#}
+{#筛选选项及主要内容#}
 {% block content %}
-    <div id="main">
-        <div class="course-infos">
-            <div class="w pr">
-                <div style="height: 15px" class="path">
-                </div>
-                <div class="hd">
-                    <h2 class="l">{{ course.name }}</h2>
-                </div>
-                <div class="statics clearfix">
-                    <div class="static-item ">
-                        <span class="meta-value"><strong>{{ course.get_degree_display }}</strong></span>
-                        <span class="meta">难度</span>
-                        <em></em>
-                    </div>
-                    <div class="static-item static-time">
-                        <span class="meta-value">{{ course.learn_times }}</span>
-                        <span class="meta">时长</span>
-                        <em></em>
-                    </div>
-                    <div class="static-item">
-                        <span class="meta-value"><strong>{{ course.students }}</strong></span>
-                        <span class="meta">学习人数</span>
-                        <em></em>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="course-info-main clearfix w has-progress">
+    <div style="width:1200px;height:675px; margin-left: 60px">
+        <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="1200"
+              poster="http://video-js.zencoder.com/oceans-clip.png"
+              data-setup="{}">
+            <source src="{{ video.url }}" type='video/mp4'>
+        </video>
+    </div>
+    <div class="course-info-main clearfix w has-progress">
             <div class="info-bar clearfix">
                 <div class="content-wrap clearfix">
                     <div class="content">
@@ -88,7 +77,7 @@
 
                                         {% for video in lesson.video_set.all %}
                                             <li>
-                                                <a target="_blank" href='{% url 'course:video' course.id video.id %}'
+                                                <a target="_blank" href='{% url 'course:video' course.id video.id%}'
                                                    class="J-media-item studyvideo">{{ video.name }}
                                                     <i class="study-state"></i>
                                                 </a>
@@ -190,7 +179,8 @@
 
             </div>
         </div>
-    </div>
+
 {% endblock %}
+
 
 

@@ -3,9 +3,9 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic.base import View  # 视图类
 
-from apps.operations.form import UserFavForm  # 表单验证类
+from apps.operations.form import UserFavForm,CommentForm  # 表单验证类
 from django.http import JsonResponse
-from apps.operations.models import UserFavorite  #用户收藏模型类
+from apps.operations.models import UserFavorite,CourseComments  #用户收藏和用户评论模型类
 from apps.courses.models import Course    #课程类
 from apps.organizations.models import CourseOrg  #机构类
 from apps.organizations.models import Teacher   #教师类
@@ -76,3 +76,37 @@ class AddFavView(View):
                 'status': 'fail',
                 'msg': '参数错误'
             })
+
+#发表评论
+class CommentView(View):
+
+    def post(self, request, *args, **kwargs):
+        # 先判断用户是否登录
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'fail',
+                'msg': '用户未登录'
+            })
+        #实例化表单
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comments = comment_form.cleaned_data['comments']
+            course = comment_form.cleaned_data['course']
+
+            ccmodel = CourseComments()
+            ccmodel.comments = comments
+            ccmodel.user = request.user
+            ccmodel.course = course
+            ccmodel.save()
+            return JsonResponse({
+                'status': 'success',
+                'msg': '评论成功'
+            })
+        else:
+            return JsonResponse({
+                'status': 'fail',
+                'msg': '评论参数错误'
+            })
+
+
+

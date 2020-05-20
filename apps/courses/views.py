@@ -7,6 +7,7 @@ from pure_pagination import Paginator, PageNotAnInteger     #分页
 
 from apps.operations.models import UserFavorite, UserCourse, CourseComments  # 用户收藏表,用户课程表
 from django.contrib.auth.mixins import LoginRequiredMixin    #必须登录使用的类
+
 #课程页
 class CourseView(View):
     def get(self, request, *args, **kwargs):
@@ -69,7 +70,6 @@ class CourseView(View):
             'hot_courses':hot_courses          #热门课程前三个
         })
 
-
 #课程详情页
 class CourseDetailView(View):
     def get(self, request,course_id,*args, **kwargs):
@@ -117,7 +117,6 @@ class CourseDetailView(View):
             'course_list':course_list         #课程推荐项
         })
 
-
 #课程章节页
 class CourseLessonView(LoginRequiredMixin,View):
     login_url = '/login/'           #进入该视图类时，如果用户没有登陆，就跳转到login进行登录
@@ -162,7 +161,6 @@ class CourseLessonView(LoginRequiredMixin,View):
             'courseresource':courseresource,           #该课程的资源
             'course_list':course_list      #学过该课程的还学过的课程
         })
-
 
 #评论模块
 class CourseCommentView(LoginRequiredMixin,View):
@@ -212,3 +210,38 @@ class CourseCommentView(LoginRequiredMixin,View):
             'course_list': course_list,  # 学过该课程的还学过的课程
             'comments':comments       #该课的用户评论
         })
+
+#视频播放
+class CourseVideoView(LoginRequiredMixin,View):
+    login_url = '/login/'  # 进入该视图类时，如果用户没有登陆，就跳转到login进行登录
+    '''
+    章节信息的展示
+    '''
+
+    def get(self, request, course_id, video_id, *args, **kwargs):
+        course = Course.objects.get(id=int(course_id))
+
+        # 查询视频信息
+        video = Video.objects.get(id=int(video_id))
+
+        # 该课的同学还学过
+        # 查询当前用户都学了那些课
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        print(user_ids)
+        # 查询这个用户关联的所有课程
+        all_courses = UserCourse.objects.filter(user_id__in=user_ids).order_by("-course__click_nums")[:5]
+        # 过滤掉当前课程
+        related_courses = []
+        for item in all_courses:
+            if item.course.id != course.id:
+                related_courses.append(item.course)
+
+        # 查询资料信息
+        course_resource = CourseResource.objects.filter(course=course)
+        return render(request, 'course-play.html',
+                      {"course": course,
+                       "course_resource": course_resource,
+                       "related_courses": related_courses,
+                       "video":video,
+                       })
