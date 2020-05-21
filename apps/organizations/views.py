@@ -101,3 +101,46 @@ class AddAsk(View):
                 'msg': '添加出错'
             })
 
+#讲师列表
+class TeacherListView(View):
+    def get(self, request, *args, **kwargs):
+        all_teachers = Teacher.objects.all()
+
+        # 经过过滤后的机构总数
+        teacher_nums = all_teachers.count()
+
+        #人气排序
+        sort = request.GET.get('sort','')
+        if sort=='hot':
+            all_teachers = all_teachers.order_by('-click_nums')     #根据点击数进行排序
+
+        # 分页部分
+        # 获取page，如果没找到或者出错都置page为1
+        try:
+            pindex = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            pindex = 1
+
+        # 参数1：作用对象，参数2：单页显示数量，参数3：request
+        p = Paginator(all_teachers, per_page=3, request=request)
+
+        teachers = p.page(pindex)  # 获取page页的信息
+
+        return render(request,'teachers-list.html',{
+            'all_teachers':teachers,       #讲师
+            'teacher_nums':teacher_nums,      #讲师数量
+            'sort':sort             #获取的前端接口值
+        })
+
+#讲师详情
+class TeacherDetailView(View):
+    def get(self, request,teacher_id, *args, **kwargs):
+
+       teachers = Teacher.objects.get(id=int(teacher_id))   #获取用户点击的讲师信息
+
+       return render(request,'teacher-detail.html',{
+           'teachers':teachers
+       })
+
+
+
