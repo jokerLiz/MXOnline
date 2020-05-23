@@ -7,6 +7,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from apps.users.form import LoginForm    #表单验证
 from django.contrib.auth import authenticate,login,logout   #登录时的表单认证，退出登录
 from django.urls import reverse       #重定向参数
+from django.contrib.auth.mixins import LoginRequiredMixin       #判断登录状态
 
 #django的登录显示及验证
 class LoginView(View):
@@ -119,3 +120,12 @@ def login1(request):
                 return render(request,'login1.html',{'msg':'密码错误','username':username})
         else:
             return render(request, 'login1.html', {'msg': '用户名不存在'})
+
+
+#个人中心--个人资料
+class UserInfoView(LoginRequiredMixin,View):
+    login_url = '/login/'
+    def get(self,request,*args,**kwargs):
+        return render(request,'usercenter-info.html',{
+
+        })
