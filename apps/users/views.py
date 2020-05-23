@@ -124,8 +124,12 @@ def login1(request):
 
 #个人中心--个人资料
 class UserInfoView(LoginRequiredMixin,View):
-    login_url = '/login/'
-    def get(self,request,*args,**kwargs):
-        return render(request,'usercenter-info.html',{
 
+    login_url = '/login/'
+
+    def get(self,request,*args,**kwargs):
+        current_page = 'info'
+
+        return render(request,'usercenter-info.html',{
+            'current_page':current_page
         })
