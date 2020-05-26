@@ -98,12 +98,11 @@
                                             <h1>{{ org.name }}</h1>
                                             <div class="pic fl">
                                                 {#是否认证和金牌#}
-                                                {% if org.is_auth and org.is_gold %}
+                                                {% if org.is_auth %}
                                                     <img src="{% static 'images/authentication.png' %}"/>
-                                                    <img src="{% static 'images/gold.png' %}"/>
-                                                {% elif org.is_auth and not org.is_gold %}
-                                                    <img src="{% static 'images/authentication.png' %}"/>
-                                                {% elif not org.is_auth and org.is_gold %}
+                                                {% endif %}
+
+                                                {% if org.is_gold %}
                                                     <img src="{% static 'images/gold.png' %}"/>
                                                 {% endif %}
 

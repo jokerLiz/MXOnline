@@ -8,6 +8,9 @@ from apps.users.form import LoginForm    #表单验证
 from django.contrib.auth import authenticate,login,logout   #登录时的表单认证，退出登录
 from django.urls import reverse       #重定向参数
 from django.contrib.auth.mixins import LoginRequiredMixin       #判断登录状态
+from apps.operations.models import UserFavorite     #用户收藏
+from apps.courses.models import Course      #课程信息类
+from apps.organizations.models import CourseOrg, Teacher  # 机构类
 
 #django的登录显示及验证
 class LoginView(View):
@@ -131,5 +134,60 @@ class UserInfoView(LoginRequiredMixin,View):
         current_page = 'info'
 
         return render(request,'usercenter-info.html',{
-            'current_page':current_page
+            'current_page':current_page        #判断css样式的标志
+        })
+
+#收藏
+#收藏机构展示
+class MyFavOrgView(LoginRequiredMixin,View):
+    login_url = '/login/'
+    def get(self, request, *args, **kwargs):
+
+        #查询数据库中当前用户收藏的机构信息
+        user_orgs = UserFavorite.objects.filter(user=request.user,fav_type=2)
+
+        org_list = []
+        #遍历这些信息取出id，并根据id在机构类中过滤用户收藏的机构
+        for fav_org in user_orgs:
+            org = CourseOrg.objects.get(id=fav_org.fav_id)   #id是唯一的，所以使用get
+            org_list.append(org)
+
+        return render(request,'usercenter-fav-org.html',{
+            'org_list':org_list,
+        })
+
+#收藏课程
+class MyFavCourseView(LoginRequiredMixin,View):
+    login_url = '/login/'
+    def get(self, request, *args, **kwargs):
+
+        # 查询数据库中当前用户收藏的课程信息
+        user_course = UserFavorite.objects.filter(user=request.user, fav_type=1)
+
+        course_list = []
+        # 遍历这些信息取出id
+        for fav_course in user_course:
+            #根据id在课程类中过滤用户收藏的课程
+            course = Course.objects.get(id=fav_course.fav_id)
+            course_list.append(course)
+
+        return render(request,'usercenter-fav-course.html',{
+            'course_list':course_list,
+        })
+
+#收藏讲师
+class MyFavTeacherView(LoginRequiredMixin,View):
+    login_url = '/login/'
+    def get(self, request, *args, **kwargs):
+        # 查询数据库中当前用户收藏的讲师信息
+        user_teacher = UserFavorite.objects.filter(user=request.user, fav_type=3)
+
+        teacher_list = []
+        # 遍历这些信息取出id
+        for fav_teacher in user_teacher:
+            # 根据id在课程类中过滤用户收藏的课程
+            teacher = Teacher.objects.get(id=fav_teacher.fav_id)
+            teacher_list.append(teacher)
+        return render(request,'usercenter-fav-teacher.html',{
+            'teacher_list':teacher_list
         })

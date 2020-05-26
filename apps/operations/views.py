@@ -1,15 +1,17 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic.base import View  # 视图类
 
-from apps.operations.form import UserFavForm,CommentForm  # 表单验证类
+from apps.operations.form import UserFavForm, CommentForm, DeleteFavForm  # 表单验证类
 from django.http import JsonResponse
 from apps.operations.models import UserFavorite, CourseComments, Banner  # 用户收藏和用户评论模型类
 from apps.courses.models import Course    #课程类
 from apps.organizations.models import CourseOrg  #机构类
 from apps.organizations.models import Teacher   #教师类
 
+#收藏
 class AddFavView(View):
     '''
     用户收藏实现：
@@ -44,6 +46,7 @@ class AddFavView(View):
             if exist:     #如果已经收藏，就删除该信息
                 exist.delete()
 
+                #当数据库中已经有该记录时，就删除该记录，改为未收藏状态。
                 if fav_type ==1:
                     course = Course.objects.get(id=fav_id)
                     course.fav_nums-=1
@@ -108,7 +111,6 @@ class CommentView(View):
                 'msg': '评论参数错误'
             })
 
-
 #首页
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -138,3 +140,23 @@ class IndexView(View):
             'banner_courses':banner_courses,       #公开课中的轮播图
             "course_orgs": course_orgs,        #课程机构
         })
+
+#删除收藏
+class DeleteFavView(LoginRequiredMixin,View):
+    login_url = '/login/'
+    def post(self, request, *args, **kwargs):
+
+        delete_fav = DeleteFavForm(request.POST)
+        if delete_fav.is_valid():
+            fav_id = delete_fav.cleaned_data['fav_id']
+            fav_type = delete_fav.cleaned_data['fav_type']
+
+            exist = UserFavorite.objects.filter(user=request.user,fav_id = fav_id,fav_type=fav_type)
+            if exist:
+                exist.delete()
+                return JsonResponse({
+                    'status': 'success',
+                    'msg': '删除成功'
+                })
+
+

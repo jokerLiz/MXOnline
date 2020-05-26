@@ -245,3 +245,4 @@ class CourseVideoView(LoginRequiredMixin,View):
                        "related_courses": related_courses,
                        "video":video,
                        })
+

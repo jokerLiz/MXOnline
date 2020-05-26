@@ -8,6 +8,8 @@ from pure_pagination import Paginator, EmptyPage, PageNotAnInteger     #分页
 
 from apps.organizations.form import AddAskForm      #导入form表单验证类
 
+from apps.operations.models import UserFavorite  # 用户收藏表
+
 # 机构列表相关操作
 class OrgView(View):
     def get(self,request,*args,**kwargs):
@@ -136,11 +138,28 @@ class TeacherListView(View):
 class TeacherDetailView(View):
     def get(self, request,teacher_id, *args, **kwargs):
 
-       teachers = Teacher.objects.get(id=int(teacher_id))   #获取用户点击的讲师信息
+        teacher = Teacher.objects.get(id=int(teacher_id))   #获取用户点击的讲师信息
 
-       return render(request,'teacher-detail.html',{
-           'teachers':teachers
-       })
+        #讲师收藏
+        has_fav_Teacher = False
+        has_fav_org = False
+        if request.user.is_authenticated:         #如果用户通过验证
+            #查询用户是否收藏了该课程或该机构
+            #fav_type=1 证明课程收藏，如果查出来，说明已经收藏了这个课
+            if UserFavorite.objects.filter(user=request.user,fav_id=int(teacher_id),fav_type=3):
+                has_fav_Teacher = True
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(teacher.org.id), fav_type=2):
+                has_fav_org = True
+        print(has_fav_Teacher)
+        #讲师排行
+        hot_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
+
+        return render(request,'teacher-detail.html',{
+            'teacher':teacher,             #讲师信息
+            'has_fav_Teacher':has_fav_Teacher,       #用户是否收藏该讲师
+            'has_fav_org':has_fav_org,
+            'hot_teachers':hot_teachers       #讲师排行
+        })
 
 
 

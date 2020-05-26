@@ -87,7 +87,7 @@
             <ul>
                 <li class="{% ifequal current_page 'info'  %}active{% endifequal %}"><a href="{% url 'users:info' %}">个人资料</a></li>
                 <li class="{% ifequal current_page 'mycourse'  %}active{% endifequal %}"><a href="{% url 'users:mycourse' %}">我的课程</a></li>
-                <li class="{% ifequal current_page 'myfav'  %}active{% endifequal %}"><a href="usercenter-fav-course.html">我的收藏</a></li>
+                <li class="{% ifequal current_page 'myfav'  %}active{% endifequal %}"><a href="{% url 'users:myfav_course' %}">我的收藏</a></li>
                 <li class="{% ifequal current_page 'message'  %}active{% endifequal %}"><a href="usercenter-message.html" style="position: relative;">我的消息</a></li>
             </ul>
         </div>
@@ -378,6 +378,8 @@
     };
     with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
 </script>
+{% block custom_js %}
 
+{% endblock %}
 </body>
 </html>

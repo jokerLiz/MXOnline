@@ -110,14 +110,14 @@
                                 <li>认&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证&nbsp;:
                                     &nbsp;&nbsp;
                                     {#是否认证和金牌#}
-                                    {% if course.course_org.is_auth and course.course_org.is_gold %}
+                                    {% if course.course_org.is_auth %}
                                         <img src="{% static 'images/authentication.png' %}"/>
-                                        <img src="{% static 'images/gold.png' %}"/>
-                                    {% elif course.course_org.is_auth and not course.course_org.is_gold %}
-                                        <img src="{% static 'images/authentication.png' %}"/>
-                                    {% elif not course.course_org.is_auth and course.course_org.is_gold %}
+                                    {% endif %}
+
+                                    {% if course.course_org.is_gold %}
                                         <img src="{% static 'images/gold.png' %}"/>
                                     {% endif %}
+
                                 </li>
                             </ul>
                         </div>
@@ -243,17 +243,17 @@
                     <div class="group_recommend">
                         {% for tuicourse in course_list %}
                             <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="{{ tuicourse.image.url }}"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> {{ tuicourse.name}}</h2></a>
-                                <span class="fl">学习时长：<i class="key">{{ tuicourse.learn_times }}</i></span>
-                            </dd>
-                        </dl>
+                                <dt>
+                                    <a target="_blank" href="">
+                                        <img width="240" height="220" class="scrollLoading"
+                                             src="{{ tuicourse.image.url }}"/>
+                                    </a>
+                                </dt>
+                                <dd>
+                                    <a target="_blank" href=""><h2> {{ tuicourse.name }}</h2></a>
+                                    <span class="fl">学习时长：<i class="key">{{ tuicourse.learn_times }}</i></span>
+                                </dd>
+                            </dl>
                         {% endfor %}
 
                     </div>
