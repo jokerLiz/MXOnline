@@ -3,6 +3,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import View   #视图类
+
+from apps.courses.models import Course
 from apps.organizations.models import *     #模型类
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger     #分页
 
@@ -10,7 +12,7 @@ from apps.organizations.form import AddAskForm      #导入form表单验证类
 
 from apps.operations.models import UserFavorite  # 用户收藏表
 
-# 机构列表相关操作
+# 机构列表
 class OrgView(View):
     def get(self,request,*args,**kwargs):
         '''
@@ -82,6 +84,106 @@ class OrgView(View):
             'hot_orgs':hot_orgs       #热门机构列表，前三个
             })
 
+#机构详情
+#home
+class OrgHomeView(View):
+    def get(self, request, org_id, *args, **kwargs):
+
+        current_page = 'home'          #高亮值判断
+
+        org = CourseOrg.objects.get(id=int(org_id))        #构信息
+
+        # 每进入该页面一次，点击书加一
+        org.click_nums += 1
+        org.save()
+
+        #机构讲师
+        teachers = org.teacher_set.all()[:2]
+        teacher_list = []
+        for teacher in teachers:
+            teacher_list.append(teacher)
+
+        #判断当前用户是否收藏了该机构
+        has_fav_org = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(org_id), fav_type=2):
+                has_fav_org = True
+
+        return render(request,'org-detail-homepage.html',{
+            'current_page':current_page,       #判断css样式显示
+            'org':org,           #机构信息
+            'teacher_list':teacher_list,         #讲师信息
+            'has_fav_org':has_fav_org       #机构收藏
+        })
+#机构详情--机构课程
+class OrgCourseView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = 'orgcourse'  # 高亮值判断
+
+        org = CourseOrg.objects.get(id=int(org_id))        #查询用户点击的机构
+
+        courses = org.course_set.all()        #查询该机构所有的课程
+
+        course_list = []
+        for course in courses:
+            course_list.append(course)
+
+        # 判断当前用户是否收藏了该机构
+        has_fav_org = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(org_id), fav_type=2):
+                has_fav_org = True
+        return render(request,'org-detail-course.html',{
+            'current_page':current_page,
+            'org':org,            #机构
+            'course_list':course_list,     #机构课程列表
+            'has_fav_org':has_fav_org,      #当前用户是否收藏
+        })
+#机构详情--介绍
+class OrgDescView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = 'orgdesc'  # 高亮值判断
+        org = CourseOrg.objects.get(id=int(org_id))
+
+        # 判断当前用户是否收藏了该机构
+        has_fav_org = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(org_id), fav_type=2):
+                has_fav_org = True
+
+        return render(request,'org-detail-desc.html',{
+            'current_page':current_page,
+            'org':org,
+            'has_fav_org':has_fav_org
+        })
+#机构详情--讲师
+class OrgTeacherView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = 'orgteacher'  # 高亮值判断
+
+        org = CourseOrg.objects.get(id=int(org_id))
+
+        #讲师
+        teachers = org.teacher_set.all()
+        teacher_list =[]
+        for teacher in teachers:
+            teacher_list.append(teacher)
+
+        # 判断当前用户是否收藏了该机构
+        has_fav_org = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=int(org_id), fav_type=2):
+                has_fav_org = True
+
+        return render(request, 'org-detail-teachers.html', {
+            'current_page':current_page,
+            'org': org,
+            'has_fav_org': has_fav_org,
+            'teacher_list':teacher_list
+        })
+
+
+
 #立即咨询函数
 class AddAsk(View):
     '''
@@ -116,6 +218,9 @@ class TeacherListView(View):
         if sort=='hot':
             all_teachers = all_teachers.order_by('-click_nums')     #根据点击数进行排序
 
+        #讲师排行榜
+        hot_teacher = Teacher.objects.all().order_by('-fav_nums')[:3]    #根据收藏数排序
+
         # 分页部分
         # 获取page，如果没找到或者出错都置page为1
         try:
@@ -131,7 +236,8 @@ class TeacherListView(View):
         return render(request,'teachers-list.html',{
             'all_teachers':teachers,       #讲师
             'teacher_nums':teacher_nums,      #讲师数量
-            'sort':sort             #获取的前端接口值
+            'sort':sort,             #获取的前端接口值
+            'hot_teacher':hot_teacher    #讲师排行榜
         })
 
 #讲师详情
@@ -139,6 +245,10 @@ class TeacherDetailView(View):
     def get(self, request,teacher_id, *args, **kwargs):
 
         teacher = Teacher.objects.get(id=int(teacher_id))   #获取用户点击的讲师信息
+
+        #每进入讲师详情页面，该讲师的点击数就加一
+        teacher.click_nums+=1
+        teacher.save()
 
         #讲师收藏
         has_fav_Teacher = False
@@ -150,7 +260,8 @@ class TeacherDetailView(View):
                 has_fav_Teacher = True
             if UserFavorite.objects.filter(user=request.user, fav_id=int(teacher.org.id), fav_type=2):
                 has_fav_org = True
-        print(has_fav_Teacher)
+        # print(has_fav_Teacher)
+
         #讲师排行
         hot_teachers = Teacher.objects.all().order_by('-click_nums')[:3]
 

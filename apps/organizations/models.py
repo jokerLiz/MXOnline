@@ -42,6 +42,15 @@ class CourseOrg(BaseModel):
 
     def __str__(self):
         return self.name
+    #获取机构课程数
+    def course_nums(self):
+        return self.course_set.all().count()
+    #获取该机构的学习人数
+    def students_nums(self):
+        students_nums = 0
+        for course in self.course_set.all():
+            students_nums+=course.students
+        return students_nums
 
 from apps.users.models import UserProfile
 class Teacher(BaseModel):

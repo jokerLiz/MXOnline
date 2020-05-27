@@ -22,12 +22,9 @@
                 <div class="butler_list layout">
                     <div class="head">
                         <ul class="fl tab_header">
-                            <li class="{% ifequal sort '' %}
-                                active
-                            {% endifequal %}"><a href="?sort=">全部</a></li>
-                            <li class="{% ifequal sort 'hot' %}
-                                active
-                            {% endifequal %}"><a href="?sort=hot">人气 &#8595;</a></li>
+                            <li class="{% ifequal sort '' %}active{% endifequal %}"><a href="?sort=">全部</a></li>
+                            <li class="{% ifequal sort 'hot' %}active{% endifequal %}"><a href="?sort=hot">人气
+                                &#8595;</a></li>
                         </ul>
                         <div class="fr butler-num">共<span class="key">{{ teacher_nums }}</span>人&nbsp;&nbsp;&nbsp;</div>
                     </div>
@@ -110,38 +107,23 @@
             <div class="right layout">
                 <div class="head">讲师排行榜</div>
 
-                <dl class="des">
-                    <span class="num fl">1</span>
-                    <a href="/diary/hk_detail/6/">
-                        <dt>
-                            <img width="50" height="50" class="scrollLoading"
-                                 src="../media/teacher/2016/11/aobama_CXWwMef.png"/>
-                        </dt>
-                    </a>
-                    <dd>
-                        <a href="/diary/hk_detail/6/">
-                            <h1 title="bobby">bobby</h1>
+                {% for teacher in hot_teacher %}
+                    <dl class="des">
+                        <span class="num fl">{{ forloop.counter }}</span>
+                        <a href="{% url 'org:teachers_detail' teacher.id %}">
+                            <dt>
+                                <img width="50" height="50" class="scrollLoading"
+                                     src="{{ teacher.image.url }}"/>
+                            </dt>
                         </a>
-                        <p>工作年限：<span>5年</span></p>
-                    </dd>
-                </dl>
-
-                <dl class="des">
-                    <span class="num fl">1</span>
-                    <a href="/diary/hk_detail/6/">
-                        <dt>
-                            <img width="50" height="50" class="scrollLoading"
-                                 src="../media/teacher/2016/11/aobama.png"/>
-                        </dt>
-                    </a>
-                    <dd>
-                        <a href="/diary/hk_detail/6/">
-                            <h1 title="还是bobby">还是bobby</h1>
-                        </a>
-                        <p>工作年限：<span>5年</span></p>
-                    </dd>
-                </dl>
-
+                        <dd>
+                            <a href="{% url 'org:teachers_detail' teacher.id %}">
+                                <h1 title="{{ teacher.name }}">{{ teacher.name }}</h1>
+                            </a>
+                            <p>工作年限：<span>{{ teacher.work_years }}</span></p>
+                        </dd>
+                    </dl>
+                {% endfor %}
 
             </div>
         </div>

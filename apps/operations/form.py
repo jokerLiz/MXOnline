@@ -15,9 +15,3 @@ class CommentForm(forms.ModelForm):
         model = CourseComments
         fields = ['course','comments']
 
-
-#删除收藏
-class DeleteFavForm(forms.ModelForm):
-    class Meta:
-        model = UserFavorite
-        fields = ['fav_id', 'fav_type']

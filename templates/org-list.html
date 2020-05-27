@@ -86,7 +86,7 @@
                             <dl class="des difdes">
                                 {#       logoimg    #}
                                 <dt>
-                                    <a href="org-detail-homepage.html">
+                                    <a href="{% url 'org:home' org.id %}">
                                         <img width="200" height="120" class="scrollLoading"
                                              data-url="{{ MEDIA_URL }}{{ org.image }}"/>
                                     </a>
@@ -94,7 +94,7 @@
                                 {#    内容数据   #}
                                 <dd>
                                     <div class="clearfix">
-                                        <a href="org-detail-homepage.html">
+                                        <a href="{% url 'org:home' org.id %}">
                                             <h1>{{ org.name }}</h1>
                                             <div class="pic fl">
                                                 {#是否认证和金牌#}
@@ -112,13 +112,13 @@
                                     </div>
                                     <ul class="cont">
                                         <li class="first"><p class="pic9">课程数：<span>{{ org.course_nums }}</span></p>
-                                            <p class="c7">学习人数：<span>{{ org.students }}</span></p></li>
+                                            <p class="c7">学习人数：<span>{{ org.students_nums }}</span></p></li>
                                         <li class="c8" style="padding-left:18px;">{{ org.address }}</li>
                                         <li class="pic10" style="padding-left:18px;">经典课程：
 
-                                            <a href="/diary/19/">c语言基础入门</a>
-
-                                            <a href="/diary/16/">数据库基础</a>
+                                            {% for course in org.course_set.all %}
+                                                <a href="/diary/19/">{{ course.name }}</a>
+                                            {% endfor %}
 
                                         </li>
                                     </ul>

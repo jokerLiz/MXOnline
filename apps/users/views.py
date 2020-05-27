@@ -142,7 +142,7 @@ class UserInfoView(LoginRequiredMixin,View):
 class MyFavOrgView(LoginRequiredMixin,View):
     login_url = '/login/'
     def get(self, request, *args, **kwargs):
-
+        current_page = 'myfavorg'
         #查询数据库中当前用户收藏的机构信息
         user_orgs = UserFavorite.objects.filter(user=request.user,fav_type=2)
 
@@ -154,13 +154,14 @@ class MyFavOrgView(LoginRequiredMixin,View):
 
         return render(request,'usercenter-fav-org.html',{
             'org_list':org_list,
+            'current_page':current_page
         })
 
 #收藏课程
 class MyFavCourseView(LoginRequiredMixin,View):
     login_url = '/login/'
     def get(self, request, *args, **kwargs):
-
+        current_page = 'myfavcourse'
         # 查询数据库中当前用户收藏的课程信息
         user_course = UserFavorite.objects.filter(user=request.user, fav_type=1)
 
@@ -173,12 +174,14 @@ class MyFavCourseView(LoginRequiredMixin,View):
 
         return render(request,'usercenter-fav-course.html',{
             'course_list':course_list,
+            'current_page':current_page
         })
 
 #收藏讲师
 class MyFavTeacherView(LoginRequiredMixin,View):
     login_url = '/login/'
     def get(self, request, *args, **kwargs):
+        current_page = 'myfavteacher'
         # 查询数据库中当前用户收藏的讲师信息
         user_teacher = UserFavorite.objects.filter(user=request.user, fav_type=3)
 
@@ -189,5 +192,6 @@ class MyFavTeacherView(LoginRequiredMixin,View):
             teacher = Teacher.objects.get(id=fav_teacher.fav_id)
             teacher_list.append(teacher)
         return render(request,'usercenter-fav-teacher.html',{
-            'teacher_list':teacher_list
+            'teacher_list':teacher_list,
+            'current_page':current_page
         })

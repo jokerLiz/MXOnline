@@ -1,0 +1,103 @@
+{% extends 'org-detail-base.html' %}
+{% block title %}
+    机构课程列表页
+{% endblock %}
+
+{% block headtwo %}
+    <div class="middle companyheader">
+        <div class="wp">
+            <img class="fl" style="width: 112px;height: 103px" src="{{ org.image.url }}"/>
+            <div class="head fl">
+                <h1>
+                    {{ org.name }}
+                    <br>
+                    {% if org.is_auth %}
+                        <img src="/static/images/authentication.png"/>
+                    {% endif %}
+                    {% if org.is_gold %}
+                        <img src="/static/images/gold.png"/>
+                    {% endif %}
+                </h1>
+                {#                <p class="fl">#}
+                {#                    <span class="fl" style="margin-top:8px;color:#848484;">推荐指数： </span>#}
+                {#                    <span class="precision company-credit" data-star-scope="5.0"></span>#}
+                {#                    <span class="key">5.0</span>#}
+                {#                </p>#}
+            </div>
+            <div class="btn fr collectionbtn  notlogin" data-favid="22" data-fav-type="1">
+                {% if has_fav_org %}已收藏{% else %}收藏{% endif %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'org:list' %}">课程机构</a>></li>
+                <li>机构课程</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block custom %}
+    <section>
+        <div class="wp list personal_list comp">
+            <div class="left">
+                <ul>
+                     <li class="{% ifequal current_page 'home' %}active2{% endifequal %}"><a href="{% url 'org:home' org.id %}">机构首页</a>
+                    </li>
+                    <li class="{% ifequal current_page 'orgcourse' %}active2{% endifequal %}"><a
+                            href="{% url 'org:orgcourse' org.id %}">机构课程</a>
+                    </li>
+                    <li class="{% ifequal current_page 'orgdesc' %}active2{% endifequal %}"><a href="{% url 'org:orgdesc' org.id %}">机构介绍</a>
+                    </li>
+                    <li class="{% ifequal current_page 'orgteacher' %}active2{% endifequal %}"><a
+                            href="{% url 'org:orgteacher' org.id %}">机构讲师</a></li>
+                </ul>
+            </div>
+
+            <div class="right companycenter layout">
+                <div class="head">
+                    <h1>机构课程</h1>
+                </div>
+                <div class="brief group_list">
+                    {% for course in course_list %}
+                        <div class="module1_5 box">
+                        <a class="comp-img-box" href="{% url 'courses:detail' course.id %}">
+
+                            <img width="214" height="195" src="{{ course.image.url }}"/>
+                        </a>
+                        <div class="des">
+                            <a href="{% url 'courses:detail' course.id %}"><h2>{{ course.name }}</h2></a>
+                            <span class="fl">课时：<i class="key">{{ course.learn_times }}</i></span>
+                            <span class="fr">学习人数：{{ course.students }}</span>
+                        </div>
+                        <div class="bottom">
+                            <span class="fl">{{ course.course_org.name }}</span>
+                            <span class="star fr  notlogin
+                            " data-favid="13" data-fav-type="4">
+                            {{ course.click_nums }}
+                        </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <div class="pageturn">
+                    <ul class="pagelist">
+                        <li class="active"><a href="?page=1">1</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+

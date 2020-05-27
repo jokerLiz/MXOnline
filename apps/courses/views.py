@@ -82,6 +82,7 @@ class CourseDetailView(View):
         '''
         #根据前台传过来的id到数据库中获取该课程的信息
         course = Course.objects.get(id=int(course_id))
+
         #当用户点击一次，就记录一次该课程的点击数
         course.click_nums+=1
         course.save()
@@ -134,11 +135,14 @@ class CourseLessonView(LoginRequiredMixin,View):
             uscour.user = request.user   #增加用户课程表
             uscour.course = course
             uscour.save()
+            course.students+=1     #学习人数加一
+            course.save()
 
         #学过该课的同学该学过模块
         all_user = UserCourse.objects.filter(course=course)    #查询学过该课的用户都有谁
         user_ids = [users.user_id for users in all_user]     #循环遍历这些用户，添加到数组中
         # print(user_ids)
+
         # 筛选出表中user_id在数组中的queryset对象
         course_all = UserCourse.objects.filter(user_id__in=user_ids).order_by('-course__click_nums')
         course_list = []         #用于存储课程列表

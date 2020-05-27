@@ -67,7 +67,7 @@
 
             <div class="middle">
                 <div class="wp">
-                    <a href="index.html"><img class="fl" src="/static/images/logo2.png"/></a>
+                    <a href="{% url 'index' %}"><img class="fl" src="/static/images/logo2.png"/></a>
                     <h1>我的慕学网</h1>
                 </div>
             </div>
@@ -85,10 +85,10 @@
     <div class="wp list personal_list">
         <div class="left">
             <ul>
-                <li class="{% ifequal current_page 'info'  %}active{% endifequal %}"><a href="{% url 'users:info' %}">个人资料</a></li>
-                <li class="{% ifequal current_page 'mycourse'  %}active{% endifequal %}"><a href="{% url 'users:mycourse' %}">我的课程</a></li>
-                <li class="{% ifequal current_page 'myfav'  %}active{% endifequal %}"><a href="{% url 'users:myfav_course' %}">我的收藏</a></li>
-                <li class="{% ifequal current_page 'message'  %}active{% endifequal %}"><a href="usercenter-message.html" style="position: relative;">我的消息</a></li>
+                <li class="{% ifequal current_page 'info'  %}active2{% endifequal %}"><a href="{% url 'users:info' %}">个人资料</a></li>
+                <li class="{% ifequal current_page 'mycourse'  %}active2{% endifequal %}"><a href="{% url 'users:mycourse' %}">我的课程</a></li>
+                <li class="{% ifequal current_page|slice:'5' 'myfav'  %}active2{% endifequal %}"><a href="{% url 'users:myfav_course' %}">我的收藏</a></li>
+                <li class="{% ifequal current_page 'message'  %}active2{% endifequal %}"><a href="usercenter-message.html" style="position: relative;">我的消息</a></li>
             </ul>
         </div>
 
