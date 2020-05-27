@@ -14,3 +14,17 @@ class LoginForm(forms.Form):
     username = forms.CharField(required=True,min_length=2)
     #属性--密码必填，并且最小长度为3
     password = forms.CharField(required=True,min_length=3)
+
+#修改密码
+class UpdatePwdForm(forms.Form):
+    password1 = forms.CharField(required=True,min_length=5)     #password1---是表单中name属性值
+    password2 = forms.CharField(required=True, min_length=5)
+
+    def clean(self):
+        #获取填写的密码
+        pwd1 = self.cleaned_data['password1']        #[名称是表单中的name属性值]
+        pwd2 = self.cleaned_data['password2']
+        #判断两次的密码是否一致
+        if pwd1 != pwd2:
+            raise  forms.ValidationError('两次密码不一致')
+        return self.cleaned_data

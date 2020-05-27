@@ -3,8 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.views.generic.base import View      #View视图
-from django.http import HttpResponse,HttpResponseRedirect
-from apps.users.form import LoginForm    #表单验证
+from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
+from apps.users.form import LoginForm, UpdatePwdForm  # 表单验证
 from django.contrib.auth import authenticate,login,logout   #登录时的表单认证，退出登录
 from django.urls import reverse       #重定向参数
 from django.contrib.auth.mixins import LoginRequiredMixin       #判断登录状态
@@ -195,3 +195,18 @@ class MyFavTeacherView(LoginRequiredMixin,View):
             'teacher_list':teacher_list,
             'current_page':current_page
         })
+
+#修改密码
+class UpdatePwdView(LoginRequiredMixin,View):
+    login_url ='/login/'
+    def post(self,request,*args,**kwargs):
+        pwd_form = UpdatePwdForm(request.POST)      #实例化表单验证
+        if pwd_form.is_valid():
+            pwd = request.POST.get('password1')      #根据name属性获取前台传过来的值
+
+            user = request.user    #获取当前用户
+            user.set_password(pwd)        #自带设置密码的模块
+            user.save()
+            return JsonResponse({'status':'success'})
+        else:
+            return JsonResponse(pwd_form.errors)

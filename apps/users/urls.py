@@ -15,4 +15,6 @@ urlpatterns = [
     url(r'^myfav_course/$',MyFavCourseView.as_view(),name='myfav_course'),
     url(r'^myfav_teacher/$',MyFavTeacherView.as_view(),name='myfav_teacher'),
 
+    #修改密码
+    url(r'^update_pwd/$',UpdatePwdView.as_view(),name='update_pwd'),
 ]
